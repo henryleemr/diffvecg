@@ -1,4 +1,5 @@
 # diffvg
+
 Differentiable Rasterizer for Vector Graphics
 https://people.csail.mit.edu/tzumao/diffvg
 
@@ -16,7 +17,41 @@ diffvg is a differentiable rasterizer for 2D vector graphics. See the webpage fo
 ![circle_outline](https://user-images.githubusercontent.com/951021/65125594-84f7a280-d9aa-11e9-8bc4-669fd2eff2f4.gif)
 ![ellipse_transform](https://user-images.githubusercontent.com/951021/67149013-06b54700-f25b-11e9-91eb-a61171c6d4a4.gif)
 
+# Debugging running on Macbook Air
+
+Installing
+
+```
+git submodule update --init --recursive
+python3.7 -m venv ./env
+source env/bin/activate
+```
+
+If you get
+
+```
+urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1091)>
+```
+
+Do this:
+https://stackoverflow.com/questions/52805115/certificate-verify-failed-unable-to-get-local-issuer-certificate
+
+This doesn't work: (already added into `requirements.txt`)
+https://medium.com/@yen.hoang.1904/resolve-issue-ssl-certificate-verify-failed-when-trying-to-open-an-url-with-python-on-macos-46d868b44e10
+
+```
+pip install --upgrade certifi
+```
+
+Then install
+
+```
+pip3 install -r requirements.txt
+python setup.py install
+```
+
 # Install
+
 ```
 git submodule update --init --recursive
 conda install -y pytorch torchvision -c pytorch
@@ -32,9 +67,11 @@ pip install torch-tools
 pip install visdom
 python setup.py install
 ```
+
 # Install using poetry
 
 ## prerequisite
+
 install python 3.7, poetry and ffmpeg
 
 ```
@@ -76,58 +113,73 @@ python setup.py build --debug install
 ```
 
 # Run
+
 ```
 cd apps
 ```
 
 Optimizing a single circle to a target.
+
 ```
 python single_circle.py
 ```
 
 Finite difference comparison.
+
 ```
 finite_difference_comp.py [-h] [--size_scale SIZE_SCALE]
                                [--clamping_factor CLAMPING_FACTOR]
                                [--use_prefiltering USE_PREFILTERING]
                                svg_file
 ```
+
 e.g.,
+
 ```
 python finite_difference_comp.py imgs/tiger.svg
 ```
 
 Interactive editor
+
 ```
 python svg_brush.py
 ```
 
 Painterly rendering
+
 ```
 painterly_rendering.py [-h] [--num_paths NUM_PATHS]
                        [--max_width MAX_WIDTH] [--use_lpips_loss]
                        [--num_iter NUM_ITER] [--use_blob]
                        target
 ```
+
 e.g.,
+
 ```
 python painterly_rendering.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0 --use_lpips_loss
 ```
 
 Image vectorization
+
 ```
 python refine_svg.py [-h] [--use_lpips_loss] [--num_iter NUM_ITER] svg target
 ```
+
 e.g.,
+
 ```
 python refine_svg.py imgs/flower.svg imgs/flower.jpg
 ```
 
 Seam carving
+
 ```
 python seam_carving.py [-h] [--svg SVG] [--optim_steps OPTIM_STEPS]
 ```
+
 e.g.,
+
 ```
 python seam_carving.py imgs/hokusai.svg
 ```

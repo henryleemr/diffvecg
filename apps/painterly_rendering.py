@@ -1,10 +1,10 @@
 """
-Scream: python painterly_rendering.py imgs/scream.jpg --num_paths 2048 --max_width 4.0
-Fallingwater: python painterly_rendering.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0
-Fallingwater: python painterly_rendering.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0 --use_lpips_loss
-Baboon: python painterly_rendering.py imgs/baboon.png --num_paths 1024 --max_width 4.0 --num_iter 250
-Baboon Lpips: python painterly_rendering.py imgs/baboon.png --num_paths 1024 --max_width 4.0 --num_iter 500 --use_lpips_loss
-Kitty: python painterly_rendering.py imgs/kitty.jpg --num_paths 1024 --use_blob
+Scream: python handsome.py imgs/scream.jpg --num_paths 2048 --max_width 4.0
+Fallingwater: python handsome.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0
+Fallingwater: python handsome.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0 --use_lpips_loss
+Baboon: python handsome.py imgs/baboon.png --num_paths 1024 --max_width 4.0 --num_iter 250
+Baboon Lpips: python handsome.py imgs/baboon.png --num_paths 1024 --max_width 4.0 --num_iter 500 --use_lpips_loss
+Kitty: python handsome.py imgs/kitty.jpg --num_paths 1024 --use_blob
 """
 import pydiffvg
 import torch
@@ -116,7 +116,7 @@ def main(args):
                  0,   # seed
                  None,
                  *scene_args)
-    pydiffvg.imwrite(img.cpu(), 'results/painterly_rendering/init.png', gamma=gamma)
+    pydiffvg.imwrite(img.cpu(), 'results/handsome/init.png', gamma=gamma)
 
     points_vars = []
     stroke_width_vars = []
@@ -162,7 +162,7 @@ def main(args):
         # Compose img with white background
         img = img[:, :, 3:4] * img[:, :, :3] + torch.ones(img.shape[0], img.shape[1], 3, device = pydiffvg.get_device()) * (1 - img[:, :, 3:4])
         # Save the intermediate render.
-        pydiffvg.imwrite(img.cpu(), 'results/painterly_rendering/iter_{}.png'.format(t), gamma=gamma)
+        pydiffvg.imwrite(img.cpu(), 'results/handsome/iter_{}.png'.format(t), gamma=gamma)
         img = img[:, :, :3]
         # Convert img from HWC to NCHW
         img = img.unsqueeze(0)
@@ -192,7 +192,7 @@ def main(args):
                 group.stroke_color.data.clamp_(0.0, 1.0)
 
         if t % 10 == 0 or t == args.num_iter - 1:
-            pydiffvg.save_svg('results/painterly_rendering/iter_{}.svg'.format(t),
+            pydiffvg.save_svg('results/handsome/iter_{}.svg'.format(t),
                               canvas_width, canvas_height, shapes, shape_groups)
     
     # Render the final result.
@@ -204,12 +204,12 @@ def main(args):
                  None,
                  *scene_args)
     # Save the intermediate render.
-    pydiffvg.imwrite(img.cpu(), 'results/painterly_rendering/final.png'.format(t), gamma=gamma)
+    pydiffvg.imwrite(img.cpu(), 'results/handsome/final.png'.format(t), gamma=gamma)
     # Convert the intermediate renderings to a video.
     from subprocess import call
     call(["ffmpeg", "-framerate", "24", "-i",
-        "results/painterly_rendering/iter_%d.png", "-vb", "20M",
-        "results/painterly_rendering/out.mp4"])
+        "results/handsome/iter_%d.png", "-vb", "20M",
+        "results/handsome/out.mp4"])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -221,3 +221,5 @@ if __name__ == "__main__":
     parser.add_argument("--use_blob", dest='use_blob', action='store_true')
     args = parser.parse_args()
     main(args)
+
+# ffmpeg -framerate 24 -i results/lf/iter_%d.png -vb 20M results/lf/out.mp4

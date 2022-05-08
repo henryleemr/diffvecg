@@ -8,3 +8,14 @@ diffvg.egg-info
 dist
 __pycache__
 .DS_Store
+
+/pybind11
+/env
+/apps/imgs
+/results
+/old_env
+*.svg
+*.png
+*jpg
+*jpeg
+*.svg
