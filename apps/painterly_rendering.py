@@ -14,12 +14,83 @@ import random
 import ttools.modules
 import argparse
 import math
+import os
+from datetime import datetime
+# import lottie
+
+
+# # //////////////////////////////////////////////////////////////////////////
+# #!/usr/bin/env python3
+# import sys
+# import os
+# # sys.path.insert(0, os.path.join(
+# #     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+# #     "lib"
+# # ))
+# from lottie.importers.svg import import_svg
+# from lottie.exporters.core import export_lottie
+
+
+# # All import/export functions can take file names or file objects
+
+# animation = import_svg(os.path.join(
+#     os.path.dirname(os.path.abspath(__file__)),
+#     "imgs/circle.svg"
+# ))
+
+# export_lottie(animation, "open_save.json")
+
+
+# # //////////////////////////////////////////////////////////////////////////
+
+
+# print("FINISHED!")
+
 
 pydiffvg.set_print_timing(True)
 
 gamma = 1.0
 
+
+def setup_results_dir(args):
+    # Create path based on target filename
+    target_filepath = args.target
+    filename_with_ext = os.path.basename(target_filepath)
+    filename =  os.path.splitext(filename_with_ext)[0]
+
+    output_filename = filename + "__" + \
+    "num_paths_" + str(args.num_paths) + "__" + \
+    "max_width" + str(args.max_width) + "__" + \
+    "use_lpips_loss" + str(args.use_lpips_loss) + "__" + \
+    "num_iter" + str(args.num_iter) + "__" + \
+    "use_blob" + str(args.use_blob)
+
+    results_path = "results/" + output_filename
+
+    # Check whether the specified path exists or not
+    isExist = os.path.exists(results_path)
+    if not isExist:
+        # Create a new directory because it does not exist 
+        os.makedirs(results_path)
+        
+    print("Saving to folder: ", results_path)
+
+    # Make a file with the arguments for this run
+    # dd/mm/YY H:M:S
+    dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    arguments_filepath = results_path + '/arguments.txt'
+    with open(arguments_filepath, 'w') as f:
+        f.write("Start: " + str(dt_string) + "\n")
+        f.write(str(args) + "\n")
+
+
+    return results_path, arguments_filepath
+
+
 def main(args):
+    results_path, arguments_filepath = setup_results_dir(args)
+
     # Use GPU if available
     pydiffvg.set_use_gpu(torch.cuda.is_available())
     
@@ -116,7 +187,7 @@ def main(args):
                  0,   # seed
                  None,
                  *scene_args)
-    pydiffvg.imwrite(img.cpu(), 'results/handsome/init.png', gamma=gamma)
+    pydiffvg.imwrite(img.cpu(), results_path+'/init.png', gamma=gamma)
 
     points_vars = []
     stroke_width_vars = []
@@ -162,7 +233,7 @@ def main(args):
         # Compose img with white background
         img = img[:, :, 3:4] * img[:, :, :3] + torch.ones(img.shape[0], img.shape[1], 3, device = pydiffvg.get_device()) * (1 - img[:, :, 3:4])
         # Save the intermediate render.
-        pydiffvg.imwrite(img.cpu(), 'results/handsome/iter_{}.png'.format(t), gamma=gamma)
+        pydiffvg.imwrite(img.cpu(), results_path+'/iter_{}.png'.format(t), gamma=gamma)
         img = img[:, :, :3]
         # Convert img from HWC to NCHW
         img = img.unsqueeze(0)
@@ -192,7 +263,7 @@ def main(args):
                 group.stroke_color.data.clamp_(0.0, 1.0)
 
         if t % 10 == 0 or t == args.num_iter - 1:
-            pydiffvg.save_svg('results/handsome/iter_{}.svg'.format(t),
+            pydiffvg.save_svg(results_path+'/iter_{}.svg'.format(t),
                               canvas_width, canvas_height, shapes, shape_groups)
     
     # Render the final result.
@@ -204,12 +275,20 @@ def main(args):
                  None,
                  *scene_args)
     # Save the intermediate render.
-    pydiffvg.imwrite(img.cpu(), 'results/handsome/final.png'.format(t), gamma=gamma)
+    pydiffvg.imwrite(img.cpu(), results_path+'/final.png'.format(t), gamma=gamma)
+
+    # Log time
+    dt_string = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    with open(arguments_filepath, 'a') as f:
+        # f.write("\n")
+        f.write("End: " + str(dt_string))
+
+
     # Convert the intermediate renderings to a video.
     from subprocess import call
     call(["ffmpeg", "-framerate", "24", "-i",
-        "results/handsome/iter_%d.png", "-vb", "20M",
-        "results/handsome/out.mp4"])
+        results_path+"/iter_%d.png", "-vb", "20M",
+        results_path+"/out.mp4"])
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -221,5 +300,3 @@ if __name__ == "__main__":
     parser.add_argument("--use_blob", dest='use_blob', action='store_true')
     args = parser.parse_args()
     main(args)
-
-# ffmpeg -framerate 24 -i results/lf/iter_%d.png -vb 20M results/lf/out.mp4
