@@ -42,5 +42,8 @@ RUN apt-get install -y build-essential
 # Install
 RUN python setup.py install
 
-# # Install mp3 creator
-# RUN apt install ffmpeg -y
+# Install mp3 creator
+RUN apt install ffmpeg -y
+
+# Update submodule
+RUN git submodule update --init --recursive
