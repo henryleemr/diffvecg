@@ -50,6 +50,58 @@ pip3 install -r requirements.txt
 python setup.py install
 ```
 
+## Using docker
+
+Install docker on Linux machine
+
+```
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+```
+
+Make sure you do git submodule update first before copying the contents to build the image!!! Unless it is already in image.
+
+```
+git submodule update --init --recursive
+```
+
+### On Macbook Pro:
+
+Mounting the volume with your host aka `-v <host_repo_root_path>:<container_repo_root_path>`
+
+```
+docker build . --tag gcc_macbook_pro_diffvg
+
+docker run -v /Users/henryleemr/Documents/workplace/lottie-files/raster-to-vector/macbook-pro/diffvg:/app -it gcc_macbook_pro_diffvg
+```
+
+### On Ubuntu Machine:
+
+```
+docker build . --tag gcc
+```
+
+Then
+
+```
+docker run --name gcc --rm -i -t gcc bash
+```
+
+OR if you want to mount:
+
+```
+docker run --name gcc -v /home/ubuntu/workspace/pro-diffvecg:/app --rm -i -t gcc bash
+```
+
+### Then train
+
+Go into the CLI on Docker Desktop then
+
+```
+cd apps
+python painterly_rendering.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0 --use_lpips_loss
+
+```
+
 # Install
 
 ```
