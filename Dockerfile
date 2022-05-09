@@ -24,23 +24,23 @@ RUN pip3 install -r requirements.txt
 # CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
 
 
-# Get c++ compiler
-# https://stackoverflow.com/questions/29732990/installing-a-gcc-compiler-onto-a-docker-container
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get clean
-RUN apt-get update && \
-    apt-get -y install gcc mono-mcs && \
-    rm -rf /var/lib/apt/lists/*
+# # Get c++ compiler
+# # https://stackoverflow.com/questions/29732990/installing-a-gcc-compiler-onto-a-docker-container
+# ENV DEBIAN_FRONTEND noninteractive
+# RUN apt-get clean
+# RUN apt-get update && \
+#     apt-get -y install gcc mono-mcs && \
+#     rm -rf /var/lib/apt/lists/*
 
-# https://github.com/emscripten-core/emscripten/issues/9669
-RUN apt-get update && apt-get install make
+# # https://github.com/emscripten-core/emscripten/issues/9669
+# RUN apt-get update && apt-get install make
 
-# https://stackoverflow.com/questions/31421327/cmake-cxx-compiler-broken-while-compiling-with-cmake
-RUN apt-get install -y build-essential
+# # https://stackoverflow.com/questions/31421327/cmake-cxx-compiler-broken-while-compiling-with-cmake
+# RUN apt-get install -y build-essential
 
 
 # Install mp3 creator
 RUN apt install ffmpeg -y
 
-# Install
-CMD python setup.py install
+# # Install
+# CMD python setup.py install
