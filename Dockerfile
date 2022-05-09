@@ -39,8 +39,8 @@ RUN apt-get update && apt-get install make
 RUN apt-get install -y build-essential
 
 
-# Install
-RUN python setup.py install
-
 # Install mp3 creator
 RUN apt install ffmpeg
+
+# Install
+CMD python setup.py install
