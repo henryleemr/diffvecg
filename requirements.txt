@@ -1,6 +1,8 @@
 
 
-# newworkign version:
+# new working version:
+lottie==0.6.11
+
 anaconda==0.0.1.1
 certifi==2021.10.8
 charset-normalizer==2.0.12
