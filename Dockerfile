@@ -45,5 +45,6 @@ RUN python setup.py install
 # Install mp3 creator
 RUN apt install ffmpeg -y
 
-# Update submodule
-RUN git submodule update --init --recursive
+# # TODO:  Update submodule, but RUN yields:
+# The command '/bin/sh -c git submodule update --init --recursive' returned a non-zero code: 127
+CMD git submodule update --init --recursive
