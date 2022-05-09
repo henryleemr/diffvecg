@@ -40,7 +40,7 @@ RUN apt-get install -y build-essential
 
 
 # Install mp3 creator
-RUN apt install ffmpeg
+RUN apt install ffmpeg -y
 
 # Install
 CMD python setup.py install
