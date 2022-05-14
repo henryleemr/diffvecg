@@ -10,12 +10,14 @@ __pycache__
 .DS_Store
 
 /pybind11
+/apps/env
 /env
-/apps/imgs
+# /apps/imgs
 /results
 /old_env
-*.svg
-*.png
-*jpg
-*jpeg
-*.svg
+# *.svg
+# *.png
+# *jpg
+# *jpeg
+# *.svg
+# *txt
