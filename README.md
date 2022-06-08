@@ -71,7 +71,31 @@ Mounting the volume with your host aka `-v <host_repo_root_path>:<container_repo
 ```
 docker build . --tag gcc_macbook_pro_diffvg
 
-docker run -v /Users/henryleemr/Documents/workplace/lottie-files/raster-to-vector/macbook-pro/diffvg:/app -it gcc_macbook_pro_diffvg
+docker run -v /Users/henryleemr/Documents/workplace/lottie-files/raster-to-vector/diffvecg:/app -it diffvecg
+```
+
+If you get this error:
+
+```
+➜  diffvecg git:(train_handsome) ✗ docker build . --tag diffvecg
+
+[+] Building 30.1s (3/3) FINISHED
+ => [internal] load build definition from Dockerfile                                    0.1s
+ => => transferring dockerfile: 1.62kB                                                  0.1s
+ => [internal] load .dockerignore                                                       0.0s
+ => => transferring context: 2B                                                         0.0s
+ => ERROR [internal] load metadata for docker.io/library/python:3.7-slim               30.0s
+------
+ > [internal] load metadata for docker.io/library/python:3.7-slim:
+------
+failed to solve with frontend dockerfile.v0: failed to create LLB definition: failed to do request: Head "https://registry-1.docker.io/v2/library/python/manifests/3.7-slim": Failed to lookup host: registry-1.docker.io
+```
+
+From this: https://github.com/docker/buildx/issues/426, do this:
+
+```
+export DOCKER_BUILDKIT=0
+export COMPOSE_DOCKER_CLI_BUILD=0
 ```
 
 ### On Ubuntu Machine:
@@ -100,6 +124,12 @@ Go into the CLI on Docker Desktop then
 cd apps
 python painterly_rendering.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0 --use_lpips_loss
 
+```
+
+Or for debugging:
+
+```
+python painterly_rendering.py imgs/line.png --num_paths 4
 ```
 
 # Install
