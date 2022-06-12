@@ -105,16 +105,18 @@ def main(args):
     pydiffvg.set_use_gpu(torch.cuda.is_available())
     
     perception_loss = ttools.modules.LPIPS().to(pydiffvg.get_device())
-    
+
     #target = torch.from_numpy(skimage.io.imread('imgs/lena.png')).to(torch.float32) / 255.0
-    target = torch.from_numpy(skimage.io.imread(args.target)).to(torch.float32) / 255.0
+    target = skimage.io.imread(args.target)
+    # If the image is [,,4] then take only [,,3]
+    target = target[:,:,:3]
+    target = torch.from_numpy(target).to(torch.float32) / 255.0
     target = target.pow(gamma)
     target = target.to(pydiffvg.get_device())
     target = target.unsqueeze(0)
     target = target.permute(0, 3, 1, 2) # NHWC -> NCHW
     #target = torch.nn.functional.interpolate(target, size = [256, 256], mode = 'area')
     canvas_width, canvas_height = target.shape[3], target.shape[2]
-    print(canvas_width, canvas_height)
 
     num_paths = args.num_paths
     max_width = args.max_width
@@ -124,6 +126,37 @@ def main(args):
     
     shapes = []
     shape_groups = []
+
+    # _shapes = []
+    # _shape_groups = []
+
+    ########################################################################################
+    # def render(canvas_width, canvas_height, shapes, shape_groups):
+    #     _render = pydiffvg.RenderFunction.apply
+    #     scene_args = pydiffvg.RenderFunction.serialize_scene(\
+    #         canvas_width, canvas_height, shapes, shape_groups)
+    #     img = _render(canvas_width, # width
+    #                 canvas_height, # height
+    #                 2,   # num_samples_x
+    #                 2,   # num_samples_y
+    #                 0,   # seed
+    #                 None,
+    #                 *scene_args)
+    #     return img
+        
+
+    # svg = os.path.join("./imgs/ball.svg")
+    # out = os.path.join("./imgs/ball.png")
+
+    # canvas_width, canvas_height, shapes, shape_groups = \
+    #     pydiffvg.svg_to_scene(svg)
+
+    # # Save initial state
+    # ref = render(canvas_width, canvas_height, shapes, shape_groups)
+    # pydiffvg.imwrite(ref.cpu(), out, gamma=2.2)
+    ########################################################################################
+
+
     if args.use_blob:
         for i in range(num_paths):
             num_segments = random.randint(3, 5)
@@ -156,10 +189,11 @@ def main(args):
                                                                         random.random()]))
             shape_groups.append(path_group)
     else:
-        svg_filepath = "./imgs/line.svg"
-        
+        svg_filepath = "./imgs/ball.svg"
         _canvas_width, _canvas_height, shapes, shape_groups = pydiffvg.svg_to_scene(svg_filepath)
-
+        assert(canvas_width==_canvas_width)
+        assert(canvas_height==_canvas_height)
+        print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
         # for i in range(num_paths):
         #     num_segments = random.randint(1, 3)
@@ -192,7 +226,21 @@ def main(args):
         #                                                                   random.random(),
         #                                                                   random.random()]))
         #     shape_groups.append(path_group)
-    
+        
+        # scene_args = pydiffvg.RenderFunction.serialize_scene(\
+        #     canvas_width, canvas_height, shapes, shape_groups)
+        
+        # render = pydiffvg.RenderFunction.apply
+        # img = render(canvas_width, # width
+        #             canvas_height, # height
+        #             2,   # num_samples_x
+        #             2,   # num_samples_y
+        #             0,   # seed
+        #             None,
+        #             *scene_args)
+        # print("_IMAGE", img.size())
+        print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
 
     ################################################################################################################################ 
     scene_args = pydiffvg.RenderFunction.serialize_scene(\
@@ -208,6 +256,10 @@ def main(args):
                  *scene_args)
     pydiffvg.imwrite(img.cpu(), results_path+'/init.png', gamma=gamma)
 
+    # img = _img
+    # shapes = _shapes
+    # shape_groups = _shape_groups
+
     points_vars = []
     stroke_width_vars = []
     color_vars = []
@@ -222,23 +274,23 @@ def main(args):
         for group in shape_groups:
             group.fill_color.requires_grad = True
             color_vars.append(group.fill_color)
-    else:
-        for group in shape_groups:
-            group.stroke_color.requires_grad = True
-            color_vars.append(group.stroke_color)
+    # else:
+    #     for group in shape_groups:
+    #         group.stroke_color.requires_grad = False
+    #         color_vars.append(group.stroke_color)
     
     # Optimize
     points_optim = torch.optim.Adam(points_vars, lr=1.0)
     if len(stroke_width_vars) > 0:
         width_optim = torch.optim.Adam(stroke_width_vars, lr=0.1)
-    color_optim = torch.optim.Adam(color_vars, lr=0.01)
+    # color_optim = torch.optim.Adam(color_vars, lr=0.01)
     # Adam iterations.
     for t in range(args.num_iter):
         print('iteration:', t)
         points_optim.zero_grad()
         if len(stroke_width_vars) > 0:
             width_optim.zero_grad()
-        color_optim.zero_grad()
+        # color_optim.zero_grad()
         # Forward pass: render the image.
         scene_args = pydiffvg.RenderFunction.serialize_scene(\
             canvas_width, canvas_height, shapes, shape_groups)
@@ -270,16 +322,16 @@ def main(args):
         points_optim.step()
         if len(stroke_width_vars) > 0:
             width_optim.step()
-        color_optim.step()
+        # color_optim.step()
         if len(stroke_width_vars) > 0:
             for path in shapes:
                 path.stroke_width.data.clamp_(1.0, max_width)
         if args.use_blob:
             for group in shape_groups:
                 group.fill_color.data.clamp_(0.0, 1.0)
-        else:
-            for group in shape_groups:
-                group.stroke_color.data.clamp_(0.0, 1.0)
+        # else:
+        #     for group in shape_groups:
+        #         group.stroke_color.data.clamp_(0.0, 1.0)
 
         if t % 10 == 0 or t == args.num_iter - 1:
             pydiffvg.save_svg(results_path+'/iter_{}.svg'.format(t),
