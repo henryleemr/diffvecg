@@ -129,128 +129,93 @@ def main(args):
     
     random.seed(1234)
     torch.manual_seed(1234)
-    
-    shapes = []
-    shape_groups = []
 
-    # _shapes = []
-    # _shape_groups = []
-
-    ########################################################################################
-    # def render(canvas_width, canvas_height, shapes, shape_groups):
-    #     _render = pydiffvg.RenderFunction.apply
+    ################################################################################################################################ 
+    # shapes = []
+    # shape_groups = []
+    # if args.use_blob:
+    #     for i in range(num_paths):
+    #         num_segments = random.randint(3, 5)
+    #         num_control_points = torch.zeros(num_segments, dtype = torch.int32) + 2
+    #         points = []
+    #         p0 = (random.random(), random.random())
+    #         points.append(p0)
+    #         for j in range(num_segments):
+    #             radius = 0.05
+    #             p1 = (p0[0] + radius * (random.random() - 0.5), p0[1] + radius * (random.random() - 0.5))
+    #             p2 = (p1[0] + radius * (random.random() - 0.5), p1[1] + radius * (random.random() - 0.5))
+    #             p3 = (p2[0] + radius * (random.random() - 0.5), p2[1] + radius * (random.random() - 0.5))
+    #             points.append(p1)
+    #             points.append(p2)
+    #             if j < num_segments - 1:
+    #                 points.append(p3)
+    #                 p0 = p3
+    #         points = torch.tensor(points)
+    #         points[:, 0] *= canvas_width
+    #         points[:, 1] *= canvas_height
+    #         path = pydiffvg.Path(num_control_points = num_control_points,
+    #                              points = points,
+    #                              stroke_width = torch.tensor(1.0),
+    #                              is_closed = True)
+    #         shapes.append(path)
+    #         path_group = pydiffvg.ShapeGroup(shape_ids = torch.tensor([len(shapes) - 1]),
+    #                                          fill_color = torch.tensor([random.random(),
+    #                                                                     random.random(),
+    #                                                                     random.random(),
+    #                                                                     random.random()]))
+    #         shape_groups.append(path_group)
+    # else:
+    #     for i in range(num_paths):
+    #         num_segments = random.randint(1, 3)
+    #         num_control_points = torch.zeros(num_segments, dtype = torch.int32) + 2
+    #         points = []
+    #         p0 = (random.random(), random.random())
+    #         points.append(p0)
+    #         for j in range(num_segments):
+    #             radius = 0.05
+    #             p1 = (p0[0] + radius * (random.random() - 0.5), p0[1] + radius * (random.random() - 0.5))
+    #             p2 = (p1[0] + radius * (random.random() - 0.5), p1[1] + radius * (random.random() - 0.5))
+    #             p3 = (p2[0] + radius * (random.random() - 0.5), p2[1] + radius * (random.random() - 0.5))
+    #             points.append(p1)
+    #             points.append(p2)
+    #             points.append(p3)
+    #             p0 = p3
+    #         points = torch.tensor(points)
+    #         points[:, 0] *= canvas_width
+    #         points[:, 1] *= canvas_height
+    #         #points = torch.rand(3 * num_segments + 1, 2) * min(canvas_width, canvas_height)
+    #         path = pydiffvg.Path(num_control_points = num_control_points,
+    #                             points = points,
+    #                             stroke_width = torch.tensor(1.0),
+    #                             is_closed = False)
+    #         shapes.append(path)
+    #         path_group = pydiffvg.ShapeGroup(shape_ids = torch.tensor([len(shapes) - 1]),
+    #                                         fill_color = None,
+    #                                         stroke_color = torch.tensor([random.random(),
+    #                                                                     random.random(),
+    #                                                                     random.random(),
+    #                                                                     random.random()]))
+    #         shape_groups.append(path_group)
+        
     #     scene_args = pydiffvg.RenderFunction.serialize_scene(\
     #         canvas_width, canvas_height, shapes, shape_groups)
-    #     img = _render(canvas_width, # width
+        
+    #     render = pydiffvg.RenderFunction.apply
+    #     img = render(canvas_width, # width
     #                 canvas_height, # height
     #                 2,   # num_samples_x
     #                 2,   # num_samples_y
     #                 0,   # seed
     #                 None,
     #                 *scene_args)
-    #     return img
-        
-
-    # svg = os.path.join("./imgs/ball.svg")
-    # out = os.path.join("./imgs/ball.png")
-
-    # canvas_width, canvas_height, shapes, shape_groups = \
-    #     pydiffvg.svg_to_scene(svg)
-
-    # # Save initial state
-    # ref = render(canvas_width, canvas_height, shapes, shape_groups)
-    # pydiffvg.imwrite(ref.cpu(), out, gamma=2.2)
-    ########################################################################################
-
-
-    # if args.use_blob:
-        # for i in range(num_paths):
-        #     num_segments = random.randint(3, 5)
-        #     num_control_points = torch.zeros(num_segments, dtype = torch.int32) + 2
-        #     points = []
-        #     p0 = (random.random(), random.random())
-        #     points.append(p0)
-        #     for j in range(num_segments):
-        #         radius = 0.05
-        #         p1 = (p0[0] + radius * (random.random() - 0.5), p0[1] + radius * (random.random() - 0.5))
-        #         p2 = (p1[0] + radius * (random.random() - 0.5), p1[1] + radius * (random.random() - 0.5))
-        #         p3 = (p2[0] + radius * (random.random() - 0.5), p2[1] + radius * (random.random() - 0.5))
-        #         points.append(p1)
-        #         points.append(p2)
-        #         if j < num_segments - 1:
-        #             points.append(p3)
-        #             p0 = p3
-        #     points = torch.tensor(points)
-        #     points[:, 0] *= canvas_width
-        #     points[:, 1] *= canvas_height
-        #     path = pydiffvg.Path(num_control_points = num_control_points,
-        #                          points = points,
-        #                          stroke_width = torch.tensor(1.0),
-        #                          is_closed = True)
-        #     shapes.append(path)
-        #     path_group = pydiffvg.ShapeGroup(shape_ids = torch.tensor([len(shapes) - 1]),
-        #                                      fill_color = torch.tensor([random.random(),
-        #                                                                 random.random(),
-        #                                                                 random.random(),
-        #                                                                 random.random()]))
-        #     shape_groups.append(path_group)
-    
-    
-    # else:
-    svg_filepath = "./imgs/puke_untuned.svg"
-    _canvas_width, _canvas_height, shapes, shape_groups = pydiffvg.svg_to_scene(svg_filepath)
-    # assert(canvas_width==_canvas_width)
-    # assert(canvas_height==_canvas_height)
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-
-    # for i in range(num_paths):
-    #     num_segments = random.randint(1, 3)
-    #     num_control_points = torch.zeros(num_segments, dtype = torch.int32) + 2
-    #     points = []
-    #     p0 = (random.random(), random.random())
-    #     points.append(p0)
-    #     for j in range(num_segments):
-    #         radius = 0.05
-    #         p1 = (p0[0] + radius * (random.random() - 0.5), p0[1] + radius * (random.random() - 0.5))
-    #         p2 = (p1[0] + radius * (random.random() - 0.5), p1[1] + radius * (random.random() - 0.5))
-    #         p3 = (p2[0] + radius * (random.random() - 0.5), p2[1] + radius * (random.random() - 0.5))
-    #         points.append(p1)
-    #         points.append(p2)
-    #         points.append(p3)
-    #         p0 = p3
-    #     points = torch.tensor(points)
-    #     points[:, 0] *= canvas_width
-    #     points[:, 1] *= canvas_height
-    #     #points = torch.rand(3 * num_segments + 1, 2) * min(canvas_width, canvas_height)
-    #     path = pydiffvg.Path(num_control_points = num_control_points,
-    #                          points = points,
-    #                          stroke_width = torch.tensor(1.0),
-    #                          is_closed = False)
-    #     shapes.append(path)
-    #     path_group = pydiffvg.ShapeGroup(shape_ids = torch.tensor([len(shapes) - 1]),
-    #                                      fill_color = None,
-    #                                      stroke_color = torch.tensor([random.random(),
-    #                                                                   random.random(),
-    #                                                                   random.random(),
-    #                                                                   random.random()]))
-    #     shape_groups.append(path_group)
-    
-    # scene_args = pydiffvg.RenderFunction.serialize_scene(\
-    #     canvas_width, canvas_height, shapes, shape_groups)
-    
-    # render = pydiffvg.RenderFunction.apply
-    # img = render(canvas_width, # width
-    #             canvas_height, # height
-    #             2,   # num_samples_x
-    #             2,   # num_samples_y
-    #             0,   # seed
-    #             None,
-    #             *scene_args)
-    # print("_IMAGE", img.size())
-    print("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-
 
     ################################################################################################################################ 
+    # Create the initialisation from an svg seed
+    svg_filepath = "./imgs/puke_untuned.svg"
+    _canvas_width, _canvas_height, shapes, shape_groups = pydiffvg.svg_to_scene(svg_filepath)
+    assert(canvas_width==_canvas_width)
+    assert(canvas_height==_canvas_height)
+    
     scene_args = pydiffvg.RenderFunction.serialize_scene(\
         canvas_width, canvas_height, shapes, shape_groups)
     
@@ -264,9 +229,6 @@ def main(args):
                  *scene_args)
     pydiffvg.imwrite(img.cpu(), results_path+'/init.png', gamma=gamma)
 
-    # img = _img
-    # shapes = _shapes
-    # shape_groups = _shape_groups
 
     points_vars = []
     stroke_width_vars = []
