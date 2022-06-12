@@ -1,8 +1,9 @@
 """
 Simple utility to render an .svg to a .png
 """
-import os
 import argparse
+import os
+
 import pydiffvg
 import torch as th
 
@@ -22,7 +23,7 @@ def render(canvas_width, canvas_height, shapes, shape_groups):
 
 
 def main(args):
-    pydiffvg.set_device(th.device('cuda:1'))
+    # pydiffvg.set_device(th.device('cuda:1'))
 
     # Load SVG
     svg = os.path.join(args.svg)
