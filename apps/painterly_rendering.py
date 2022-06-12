@@ -10,7 +10,7 @@ Example command to run this version: (--use_blob is required for this version, a
 # shape group when using pydiffvg.svg_to_scene(svg_filepath))
 python painterly_rendering.py imgs/puke.png --num_iter 101 --num_paths=512 --use_blob 
 
-
+# TODO: Debug the case where --use_blob=False, that is, instead of filled shapes, you use strokes with a width
 """
 import argparse
 import math
