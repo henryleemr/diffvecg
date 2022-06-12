@@ -29,45 +29,6 @@ pydiffvg.set_print_timing(True)
 gamma = 1.0
 
 
-
-def test():
-    # p= random.randint(1, 3)
-    # a = torch.zeros(2, dtype = torch.int32) + 2
-    # print(a)
-
-    canvas_width = 500
-    canvas_height = 600
-    num_paths = 1
-
-    for i in range(num_paths):
-            num_segments = random.randint(1, 3)
-            print(num_segments)
-            num_control_points = torch.zeros(num_segments, dtype = torch.int32) + 2
-            print(num_control_points)
-            points = []
-            p0 = (random.random(), random.random())
-            points.append(p0)
-            print(points)
-            for j in range(num_segments):
-                radius = 0.05
-                p1 = (p0[0] + radius * (random.random() - 0.5), p0[1] + radius * (random.random() - 0.5))
-                print("p1: ", p1)
-                p2 = (p1[0] + radius * (random.random() - 0.5), p1[1] + radius * (random.random() - 0.5))
-                print("p2: ", p2)
-                p3 = (p2[0] + radius * (random.random() - 0.5), p2[1] + radius * (random.random() - 0.5))
-                print("p3: ", p3)
-                points.append(p1)
-                points.append(p2)
-                points.append(p3)
-                p0 = p3
-            points = torch.tensor(points)
-            print("points: ", points)
-            points[:, 0] *= canvas_width
-            points[:, 1] *= canvas_height
-
-    print("FINISHED")
-
-
 def setup_results_dir(args):
     # Create path based on target filename
     target_filepath = args.target
@@ -211,7 +172,7 @@ def main(args):
 
     ################################################################################################################################ 
     # Create the initialisation from an svg seed
-    svg_filepath = "./imgs/puke_untuned.svg"
+    svg_filepath = "./imgs/ball_untuned.svg"
     _canvas_width, _canvas_height, shapes, shape_groups = pydiffvg.svg_to_scene(svg_filepath)
     assert(canvas_width==_canvas_width)
     assert(canvas_height==_canvas_height)
@@ -244,12 +205,10 @@ def main(args):
         for group in shape_groups:
             group.fill_color.requires_grad = True
             color_vars.append(group.fill_color)
-    # else:
-        # print("HERE3")
-        # for group in shape_groups:
-            # print("STROKE COLOR: ", group.stroke_color)
-            # group.stroke_color.requires_grad = True
-            # color_vars.append(group.stroke_color)
+    else:
+        for group in shape_groups:
+            group.stroke_color.requires_grad = True
+            color_vars.append(group.stroke_color)
 
     
     # Optimize
