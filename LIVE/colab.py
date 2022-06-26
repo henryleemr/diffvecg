@@ -2,6 +2,8 @@
 Here are some use cases:
 python main.py --config config/all.yaml --experiment experiment_8x1 --signature demo1 --target data/demo1.png
 """
+# flake8: noqa
+
 import argparse
 import errno
 import math
