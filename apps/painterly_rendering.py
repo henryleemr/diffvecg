@@ -10,6 +10,8 @@ Example command to run this version: (--use_blob is required for this version, a
 # shape group when using pydiffvg.svg_to_scene(svg_filepath))
 python painterly_rendering.py imgs/puke.png --num_iter 101 --num_paths=512 --use_blob 
 
+# TODO: Debug the final svg, the final png is correct but not the svg, so that we can export it to lottie that looks like the final rednered png
+
 # TODO: Debug the case where --use_blob=False, that is, instead of filled shapes, you use strokes with a width
 """
 import argparse
@@ -172,7 +174,7 @@ def main(args):
 
     ################################################################################################################################ 
     # Create the initialisation from an svg seed
-    svg_filepath = "./imgs/ball_untuned.svg"
+    svg_filepath = "./imgs/shapes_untuned.svg"
     _canvas_width, _canvas_height, shapes, shape_groups = pydiffvg.svg_to_scene(svg_filepath)
     assert(canvas_width==_canvas_width)
     assert(canvas_height==_canvas_height)

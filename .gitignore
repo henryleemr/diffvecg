@@ -21,3 +21,5 @@ __pycache__
 # *jpeg
 # *.svg
 # *txt
+apps/painterly_original.py
+LIVE/log
