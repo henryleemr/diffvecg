@@ -2,34 +2,36 @@
 Here are some use cases:
 python main.py --config config/all.yaml --experiment experiment_8x1 --signature demo1 --target data/demo1.png
 """
-import pydiffvg
-import torch
+import argparse
+import errno
+import math
+import random
+import warnings
+
 import cv2
 import matplotlib.pyplot as plt
-import random
-import argparse
-import math
-import errno
-from tqdm import tqdm
-from torch.optim.lr_scheduler import CosineAnnealingLR, LambdaLR
+import pydiffvg
+import torch
 from torch.nn.functional import adaptive_avg_pool2d
-import warnings
+from torch.optim.lr_scheduler import CosineAnnealingLR, LambdaLR
+from tqdm import tqdm
+
 warnings.filterwarnings("ignore")
 
-import PIL
-import PIL.Image
+import copy
 import os
 import os.path as osp
+import shutil
+
 import numpy as np
 import numpy.random as npr
-import shutil
-import copy
-# import skfmm
-from xing_loss import xing_loss
-
+import PIL
+import PIL.Image
 import yaml
 from easydict import EasyDict as edict
 
+# import skfmm
+from xing_loss import xing_loss
 
 pydiffvg.set_print_timing(False)
 gamma = 1.0
@@ -38,11 +40,13 @@ gamma = 1.0
 # helper #
 ##########
 
-from utils import \
-    get_experiment_id, \
-    get_path_schedule, \
-    edict_2_dict, \
-    check_and_create_dir
+from utils import (
+    check_and_create_dir,
+    edict_2_dict,
+    get_experiment_id,
+    get_path_schedule,
+)
+
 
 def get_bezier_circle(radius=1, segments=4, bias=None):
     points = []
