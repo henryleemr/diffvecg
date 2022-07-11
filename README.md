@@ -122,7 +122,7 @@ Go into the CLI on Docker Desktop then
 
 ```
 cd apps
-python painterly_rendering.py imgs/fallingwater.jpg --num_paths 2048 --max_width 4.0 --use_lpips_loss
+python painterly_original.py imgs/fallingwater.jpg --num_paths 2 --max_width 4.0 --use_lpips_loss
 
 ```
 
