@@ -60,7 +60,7 @@ LIVE
 Create a container instance the `diffvecg` as a base image, and call the container instance `live`:
 
 ```
-docker run --name live -v /Users/henryleemr/Documents/workplace/lottie-files/raster-to-vector/diffvecg:/app -it diffvecg
+docker run --name live-from-diffvecg-image -v /Users/henryleemr/Documents/workplace/lottie-files/raster-to-vector/diffvecg:/app -it diffvecg
 ```
 
 Then in the container instance, do

@@ -1,4 +1,3 @@
-
 default:
   use_ycrcb: False
   seginit:
@@ -10,11 +9,11 @@ default:
     output: true
     video: true
     loss: false
-  trainable: 
+  trainable:
     bg: False
     record: True
     stroke: False
-#  num_segments: 4
+  #  num_segments: 4
   num_iter: 500
   lr_base:
     bg: 0.01
@@ -65,4 +64,3 @@ experiment_1357:
   path_schedule:
     type: list
     schedule: [1, 3, 5, 7]
-
