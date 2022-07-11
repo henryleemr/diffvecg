@@ -1,0 +1,42 @@
+
+
+Initialised svg:
+
+<?xml version="1.0" ?>
+<svg height="512" version="1.1" width="341" xmlns="http://www.w3.org/2000/svg">
+  <defs/>
+  <g>
+    <path d="M 38.846038818359375 47.409515380859375 C 48.39085006713867 55.26875305175781 40.461631774902344 60.21179962158203 33.614723205566406 56.490482330322266 C 25.386962890625 68.94969940185547 17.132020950317383 72.74651336669922 14.863457679748535 69.81344604492188" fill="none" stroke="rgb(20, 184, 213)" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.49308375" stroke-width="2.0"/>
+    <path d="M 21.015775680541992 276.03717041015625 C 20.434335708618164 278.6346435546875 13.425599098205566 280.6571044921875 9.497045516967773 282.1017761230469" fill="none" stroke="rgb(161, 125, 88)" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.23915213" stroke-width="2.0"/>
+  </g>
+</svg>
+
+
+
+
+FIRST ITERATION:
+
+points_vars:  
+[tensor([[39.8460, 46.4095],
+        [47.3912, 54.2688],
+        [39.4617, 59.2118],
+        [32.6148, 55.4905],
+        [24.3870, 67.9497],
+        [16.1321, 71.7466],
+        [15.8635, 70.8134]], requires_grad=True), tensor([[ 22.0157, 277.0371],
+        [ 21.4343, 279.6346],
+        [ 14.4255, 281.6571],
+        [ 10.4970, 283.1017]], requires_grad=True)]
+
+
+stroke_width_vars:  
+[tensor(1., requires_grad=True), tensor(1., requires_grad=True)]
+
+
+color_vars:  
+[tensor([0.0913, 0.7134, 0.8453, 0.5031], requires_grad=True), tensor([0.6446, 0.4810, 0.3552, 0.2492], requires_grad=True)]
+
+
+
+
+
